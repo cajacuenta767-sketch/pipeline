@@ -1,0 +1,6 @@
+@YonkeWebApi_HostAddress = http://localhost:5254
+
+GET {{YonkeWebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
