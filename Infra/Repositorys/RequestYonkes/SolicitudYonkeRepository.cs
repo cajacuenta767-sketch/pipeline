@@ -1,8 +1,10 @@
-﻿using Core.Entitys;
+﻿using Core.DTO.SolicitudYonkes;
+using Core.Entitys;
 using Core.Enums;
 using Core.Interfaces.RequestYonkes;
 using Infra.DataContext;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace Infra.Repositorys.RequestYonkes
 {
@@ -73,6 +75,8 @@ namespace Infra.Repositorys.RequestYonkes
 					  .FirstOrDefaultAsync(x => x.GuidId == guidId);
 		}
 
+
+		
 		public async Task<SolicitudYonkes?> GetDataSolicitudyonkeByGuidId(Guid guidId)
 		{
 			return await _entities					  
@@ -114,6 +118,8 @@ namespace Infra.Repositorys.RequestYonkes
 					  .ToListAsync();
 		}
 
+
+		//Verificar si existe 
 		public async Task<IList<SolicitudYonkes>> ObtenerPorYonkeAsync(Guid YonkeGuidId)
 		{
 			return await _entities
@@ -193,19 +199,98 @@ namespace Infra.Repositorys.RequestYonkes
 			return await _entities.CountAsync(x => x.SolicitudGuidId == SolicitudGuidId && x.EstatusId == estatusId);
 		}
 
-		public async Task<List<SolicitudYonkes>> ObtenerSolicitudesPorYonkeAsync(Guid yonkeGuidId)
+
+
+		//La mas reciente solicutud de cada yonke nueva
+		public async Task<SolicitudYonke_List_DTO?> SolicitudMasRecienteByYonke(Guid yonkeGuidId)
+		{
+			if (yonkeGuidId == Guid.Empty)
+				return null;
+
+			return await _context.SolicitudYonkes
+		   .AsNoTracking()
+		   .Where(x => x.YonkeGuidId == yonkeGuidId)
+		   .OrderByDescending(x => x.FechaEnvio)
+		   .Select(x => new SolicitudYonke_List_DTO
+		   {
+			   SolicitudYonkeGuidId = x.GuidId,
+			   SolicitudGuidId = x.Solicitudes.GuidId,
+			   Folio = x.Solicitudes.Folio,
+			   PiezaBuscada = x.Solicitudes.PiezaBuscada,
+			   NumeroParte = x.Solicitudes.NumeroParte,
+			   FechaSolicitud = x.Solicitudes.FechaCreacion,
+			   FechaEnvio = x.FechaEnvio,
+			   EstatusId = x.EstatusId,
+			   Estatus = x.SolicitudYonkesEstatus.EstatusSolicitud,
+			   Vista = x.FechaVista.HasValue,
+			   FechaVista = x.FechaVista,
+
+			   Imagenes = x.Solicitudes.solicitudesImagenes
+					   .Select(i => new SolicitudImagen_DTO
+					   {
+						   GuidId = i.GuidId,
+						   Url = i.UrlImagen
+					   })
+					   .ToList(),
+
+			   Ciudades = x.Solicitudes.SolicitudesCiudades
+					   .Select(c => new SolicitudCiudad_DTO
+					   {
+						   CiudadId = c.CiudadId,
+						   Ciudad = c.Ciudades.Ciudad
+					   })
+					   .ToList()
+		   })
+		   .FirstOrDefaultAsync();
+		}
+
+		//Todas las solicitudes de cada yonke logeado
+		public async Task<List<SolicitudYonke_List_DTO>> ObtenerSolicitudesPorYonkeAsync(Guid yonkeGuidId, CancellationToken cancellationToken)
 		{
 			return await _context.SolicitudYonkes
-			   .Include(x => x.Solicitudes)
-					.ThenInclude(x => x.solicitudesImagenes)
-			   .Include(x => x.Solicitudes)
-				   .ThenInclude(x => x.SolicitudesCiudades)
-					   .ThenInclude(x => x.Ciudades)
-			   .Where(x => x.YonkeGuidId == yonkeGuidId)
-			   .OrderByDescending(x => x.FechaEnvio)
-			   .ToListAsync();
+		   .AsNoTracking()
+		   .Where(x => x.YonkeGuidId == yonkeGuidId)
+		   .OrderByDescending(x => x.FechaEnvio)
+		   .Select(x => new SolicitudYonke_List_DTO
+			   {
+				   SolicitudYonkeGuidId = x.GuidId,
+				   SolicitudGuidId = x.Solicitudes.GuidId,
+				   Folio = x.Solicitudes.Folio,
+				   PiezaBuscada = x.Solicitudes.PiezaBuscada,
+				   NumeroParte = x.Solicitudes.NumeroParte,
+				   FechaSolicitud = x.Solicitudes.FechaCreacion,
+				   FechaEnvio = x.FechaEnvio,
+				   EstatusId = x.EstatusId,
+				   Estatus = x.SolicitudYonkesEstatus.EstatusSolicitud,
+				   Vista = x.FechaVista.HasValue,
+				   FechaVista = x.FechaVista,
+
+				   Imagenes = x.Solicitudes.solicitudesImagenes
+					   .Select(i => new SolicitudImagen_DTO
+					   {
+						   GuidId = i.GuidId,
+						   Url = i.UrlImagen
+					   })
+					   .ToList(),
+
+				   Ciudades = x.Solicitudes.SolicitudesCiudades
+					   .Select(c => new SolicitudCiudad_DTO
+					   {
+						   CiudadId = c.CiudadId,
+						   Ciudad = c.Ciudades.Ciudad
+					   })
+					   .ToList()
+			   })
+		   .ToListAsync(cancellationToken);
 		}
 
 		
+
+
+		
+
+
+
+
 	}
 }

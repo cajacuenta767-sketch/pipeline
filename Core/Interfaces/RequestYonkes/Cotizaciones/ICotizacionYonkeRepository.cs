@@ -13,5 +13,9 @@ namespace Core.Interfaces.RequestYonkes.Cotizaciones
 		/// Valida si ya existe una cotización para esa solicitud.
 		/// </summary>
 		Task<bool> ExisteCotizacionAsync(Guid solicitudYonkeGuidId);
+
+		
+		//Contar las cotizaciones generadasd de cada Yonke Autenticad
+		Task<int> ObtenerCotizacionesPorYonkeAsync(CancellationToken cancellationToken);
 	}
 }

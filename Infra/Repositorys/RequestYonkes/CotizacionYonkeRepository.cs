@@ -45,9 +45,13 @@ namespace Infra.Repositorys.RequestYonkes
 			   .FirstOrDefaultAsync(x => x.GuidId == guidId,   cancellationToken);
 		}
 
-
-
-
-		
+		public async Task<int> ContarPorYonkeAsync(Guid yonkeGuidId, CancellationToken cancellationToken)
+		{
+			return await _context.SolicitudCotizaciones
+				.AsNoTracking()
+				.CountAsync(
+					x => x.SolicitudYonkes.YonkeGuidId == yonkeGuidId,
+					cancellationToken);
+		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Core.Entitys;
+﻿using Core.DTO.SolicitudYonkes;
+using Core.Entitys;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Interfaces.BuildSecurity;
@@ -268,6 +269,30 @@ namespace Core.Services.RequestYonkes
 		}
 
 
-		
+		//Contar solicitudes nuevas by yonke
+		public async Task<int> ContarPendientesPorYonkeAsync(Guid YonkeGuidId)
+		{
+			return await _unitOfWorkSolicitudYonkes
+				.SolicitudYonkeRepository
+				.ContarPendientesPorYonkeAsync(YonkeGuidId);
+		}
+
+
+		//Mas reciente solicitud by yonke
+		public async Task<SolicitudYonke_List_DTO?> SolicitudRecienteByYonke(Guid YonkeGuidId)
+		{
+			return await _unitOfWorkSolicitudYonkes
+				.SolicitudYonkeRepository
+				.SolicitudMasRecienteByYonke(YonkeGuidId);
+		}
+
+
+		//Todas las solicitdes de cada yonke
+		public async Task<List<SolicitudYonke_List_DTO>> ObtenerSolicitudesPorYonkeAsync(Guid YonkeGuidId, CancellationToken cancellationToken)
+		{
+			return await _unitOfWorkSolicitudYonkes
+				.SolicitudYonkeRepository
+				.ObtenerSolicitudesPorYonkeAsync(YonkeGuidId, cancellationToken);
+		}
 	}
 }

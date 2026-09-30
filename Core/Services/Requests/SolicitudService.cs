@@ -92,7 +92,7 @@ namespace Core.Services.Requests
 					cancellationToken);
 
 			//***********Modificar cuando se tenga las membresias de los clientes ****************///
-			const int limiteSolicitudesDiarias = 3;
+			const int limiteSolicitudesDiarias = 10;
 
 			if (solicitudesHoy >= limiteSolicitudesDiarias)
 			{
@@ -348,6 +348,8 @@ namespace Core.Services.Requests
 				.SolicitudesRepository
 				.ContarSolicitudesPorUsuarioAsync((Guid)usuarioId);
 		}
+
+
 		public IQueryable<Solicitud_Busqueda_DTO> VerSolicitudesByUserDashboard()
 		{
 			var usuarioId = _currentUserService.UserId;
@@ -395,6 +397,9 @@ namespace Core.Services.Requests
 			.GetCotizacionesByUserId((Guid)usuarioId);
 		}
 
+
+		//Mas reciente del cliente
+
 		public async Task<Solicitud_Busqueda_DTO?> ObtenerSolicitudMasRecienteAsync()
 		{
 			var usuarioId = _currentUserService.UserId;
@@ -407,7 +412,7 @@ namespace Core.Services.Requests
 
 			return await _unitofWorkSolicitudes
 			.SolicitudesRepository
-			.ObtenerSolicitudMasRecienteAsync((Guid)usuarioId);
+			.ObtenerSolicitudMasRecienteAsync(usuarioId.Value);
 		}
 	}
 }

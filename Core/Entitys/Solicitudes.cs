@@ -19,7 +19,7 @@ namespace Core.Entitys
 		//[NotMapped]
 		public int Id { get; set; }
 		public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
-		public Guid GuidId { get; set; } = Guid.NewGuid();
+		public Guid GuidId { get; set; }
 		public Guid UsuarioId { get; set; }
 		public int EstatusSolicitudId { get; set; }	
 		public int MarcaId { get; set; }

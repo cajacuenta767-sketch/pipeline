@@ -9,6 +9,7 @@ using Core.Interfaces.BuildSecurity;
 using Core.Interfaces.Requests;
 using Infra.DataContext;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System.Linq.Expressions;
 
 namespace Infra.Repositorys.Requests
@@ -300,7 +301,7 @@ namespace Infra.Repositorys.Requests
 
 
 
-		//Soliciud mas reciente
+		//Soliciud mas reciente del cliente
 		public async Task<Solicitud_Busqueda_DTO?> ObtenerSolicitudMasRecienteAsync(Guid userId)
 		{
 			var estatusPermitidos = new List<int>
@@ -348,5 +349,14 @@ namespace Infra.Repositorys.Requests
 			return await _context.Solicitudes
 				.CountAsync(predicate, cancellationToken);
 		}
+
+
+
+
+		
+
+	
+
+
 	}
 }

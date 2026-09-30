@@ -33,6 +33,7 @@ using Core.Interfaces.RequestYonkes.CotizacionMessages;
 using Core.Interfaces.RequestYonkes.OrdenesPago;
 using Core.Interfaces.RequestYonkes.Solicitudes;
 using Core.Interfaces.SingalR;
+using Core.Interfaces.SmtpGmail;
 using Core.Interfaces.Stripe;
 using Core.Interfaces.Utilerias;
 using Core.Interfaces.Utilerias.brand;
@@ -48,6 +49,7 @@ using Core.Services.Negocio.Empresa;
 using Core.Services.Ordens;
 using Core.Services.Requests;
 using Core.Services.RequestYonkes;
+using Core.Services.SendSmtpGmail;
 using Core.Services.SignalR;
 using Core.Services.smsMasivo;
 using Core.Services.SolicitudCotizaciones;
@@ -204,6 +206,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		};
 	});
 
+//Una hora para reset password
+builder.Services.Configure<DataProtectionTokenProviderOptions>(
+	options =>
+	{
+		options.TokenLifespan = TimeSpan.FromHours(1);
+	});
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
@@ -269,6 +277,9 @@ builder.Services.AddScoped<IClienteOtpRepository, ClienteOtpRepository>();
 
 //Sms Masivos
 builder.Services.Configure<SmsMasivosSettings>(builder.Configuration.GetSection("SmsMasivos"));
+
+//servicios de gmail correo
+builder.Services.AddTransient<IMailSmtpService, SendSmtpGmailService>();    
 
 builder.Services.AddHttpClient<ISmsService, SmsMasivosService>(
 	client =>

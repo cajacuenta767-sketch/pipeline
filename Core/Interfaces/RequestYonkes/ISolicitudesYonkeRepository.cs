@@ -1,4 +1,5 @@
-﻿using Core.Entitys;
+﻿using Core.DTO.SolicitudYonkes;
+using Core.Entitys;
 
 namespace Core.Interfaces.RequestYonkes
 {
@@ -78,14 +79,15 @@ namespace Core.Interfaces.RequestYonkes
 		//Contar los enviados para vista del cliente
 		Task<int> ContarEnviosAsync(Guid SolicitudGuidId);
 
+
+		//Contar solicitudes nuevas de cada yonke
 		Task<int> ContarPorSolicitudYEstatusAsync(Guid SolicitudGuidId, int estatusId);
 
 
+		//Mas reciente Solitciud de cada yonke
+		Task<SolicitudYonke_List_DTO> SolicitudMasRecienteByYonke(Guid yonkeGuidId);
 
-		Task<List<SolicitudYonkes>> ObtenerSolicitudesPorYonkeAsync(Guid yonkeGuidId);
-
-
-
-	
+		//Todas las solicitudes de cada yonke 
+		Task<List<SolicitudYonke_List_DTO>> ObtenerSolicitudesPorYonkeAsync(Guid yonkeGuidId, CancellationToken cancellationToken);
 	}
 }

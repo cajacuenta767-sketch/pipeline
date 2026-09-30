@@ -11,7 +11,7 @@ namespace ApiYonke.Controllers.Asociados
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	//[Authorize]
+	
 	public class CotizacionYonkeController : ControllerBase
 	{
 		private readonly ICotizacionYonkeService _cotizacionYonkeService;
@@ -27,15 +27,8 @@ namespace ApiYonke.Controllers.Asociados
 		/// </summary>
 		[HttpPost]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Asociado")]
-		public async Task<IActionResult> RegistrarCotizacion(Guid solicitudYonkeGuidId,
-															[FromForm] RegistrarCotizacionRequest request,
-															CancellationToken cancellationToken)
-		{
-			//var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			//if (string.IsNullOrWhiteSpace(usuarioId))
-			//	throw new UnauthorizedAccessException("No fue posible identificar al usuario.");
-
+		public async Task<IActionResult> RegistrarCotizacion(Guid solicitudYonkeGuidId,	[FromForm] RegistrarCotizacionRequest request, CancellationToken cancellationToken)
+		{	
 			var guid = await _cotizacionYonkeService.RegistrarCotizacionAsync(
 				solicitudYonkeGuidId,
 				request,
@@ -46,28 +39,6 @@ namespace ApiYonke.Controllers.Asociados
 				"Cotización registrada correctamente."));
 		}
 
-		/// <summary>
-		/// Actualiza una cotización.
-		/// </summary>
-		[HttpPut("{cotizacionGuidId:guid}")]
-		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Asociado")]
-		public async Task<ActionResult<ApiResponseGlobal<string>>> ActualizarCotizacion(
-			Guid cotizacionGuidId,
-			[FromBody] RegistrarCotizacionRequest request,
-			CancellationToken cancellationToken)
-		{
-			
-
-			await _cotizacionYonkeService.ActualizarCotizacionAsync(
-				cotizacionGuidId,
-				request,
-				cancellationToken);
-
-			return Ok(ApiResponseGlobal<string>.Ok(
-				string.Empty,
-				"Cotización actualizada correctamente."));
-		}
-
 
 
 		/// <summary>
@@ -75,8 +46,7 @@ namespace ApiYonke.Controllers.Asociados
 		/// </summary>
 		[HttpGet("{cotizacionGuidId:guid}")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Asociado, Cliente")]
-		public async Task<ActionResult<ApiResponseGlobal<SolicitudCotizaciones>>> ObtenerCotizacion(
-			Guid cotizacionGuidId, CancellationToken cancellationToken)
+		public async Task<ActionResult<ApiResponseGlobal<SolicitudCotizaciones>>> ObtenerCotizacion(Guid cotizacionGuidId, CancellationToken cancellationToken)
 		{
 			var cotizacion = await _cotizacionYonkeService
 				.ObtenerPorGuidAsync(cotizacionGuidId, cancellationToken);
@@ -89,6 +59,40 @@ namespace ApiYonke.Controllers.Asociados
 				"Cotización obtenida correctamente."));
 		}
 
+
+
+		/// <summary>
+		/// Actualiza una cotización.
+		/// </summary>
+		[HttpPut("{cotizacionGuidId:guid}")]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Asociado")]
+		public async Task<ActionResult<ApiResponseGlobal<string>>> ActualizarCotizacion(Guid cotizacionGuidId, [FromBody] RegistrarCotizacionRequest request, CancellationToken cancellationToken)
+		{
+			await _cotizacionYonkeService.ActualizarCotizacionAsync(
+				cotizacionGuidId,
+				request,
+				cancellationToken);
+
+			return Ok(ApiResponseGlobal<string>.Ok(
+				string.Empty,
+				"Cotización actualizada correctamente."));
+		}
+
+
+
+		////Cotizaciones enviadas////
+		[HttpGet("MisCotizaciones/Total")]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Asociado")]
+		public async Task<ActionResult<ApiResponseGlobal<int>>> ObtenerTotalCotizaciones(CancellationToken cancellationToken)
+		{
+			var total = await _cotizacionYonkeService
+				.ObtenerCotizacionesPorYonkeAsync(cancellationToken);
+
+			return Ok(
+				ApiResponseGlobal<int>.Ok(
+					total,
+					"Total de cotizaciones obtenido correctamente."));
+		}
 
 
 

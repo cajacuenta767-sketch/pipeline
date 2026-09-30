@@ -11,5 +11,9 @@ namespace Core.Interfaces.Requests.Solicitud
 		Task<Solicitudes> NuevaSolicitud(Solicitudes_Create_DTO solicitudSave, CancellationToken cancellationToken);
 		Task<bool> UpdateSolcitud(Solicitudes solicitud, CancellationToken cancellationToken);
 		Task<string> UpdateStatusAsync(SolicitudUpdateStatusDTO dto, CancellationToken cancellationToken);
+
+
+
+		//Task<Solicitud_Busqueda_DTO?> SolicitudRecienteByYonke(CancellationToken cancellationToken);
 	}
 }

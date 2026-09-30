@@ -474,5 +474,24 @@ namespace Core.Services.SolicitudCotizaciones
 		}
 
 
+		//Contar las cotizaciones generadas por yonke autenticado
+		public async Task<int> ObtenerCotizacionesPorYonkeAsync(CancellationToken cancellationToken)
+		{
+			var yonkeGuidId = _currentUserService.YonkeGuidId;
+
+			if (!yonkeGuidId.HasValue || yonkeGuidId.Value == Guid.Empty)
+			{
+				throw new UnauthorizedAccessException(
+					"No fue posible identificar el yonke autenticado.");
+			}
+
+			var total = await _unitOfWork
+				.SolicitudCotizacionRepository
+				.ContarPorYonkeAsync(
+					yonkeGuidId.Value,
+					cancellationToken);
+
+			return total;
+		}
 	}
 }

@@ -24,5 +24,6 @@
 		public int? TiempoEntregaDias { get; set; }
 		public bool Activo { get; set; }
 		public int EstatusId { get; set; }
+		public int? EstadoPago { get; set; }
 	}
 }

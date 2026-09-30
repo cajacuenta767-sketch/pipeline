@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.DTO.Solicitudes.Requests;
 using Core.Entitys;
+using Core.Exceptions;
 using Core.Interfaces.Requests.Estatus;
 using Core.Interfaces.Requests.Solicitud;
 using Core.Pagination;
@@ -161,23 +162,31 @@ namespace ApiYonke.Controllers.Suscriptores
 		public async Task<IActionResult> NuevaSolicitud([FromBody] Solicitudes_Create_DTO dto, CancellationToken cancellationToken)
 		{
 			if (dto == null)
-				return BadRequest(ApiResponseGlobal<string>.Fail("Datos inválidos"));
+				return BadRequest(
+					ApiResponseGlobal<string>.Fail("Datos inválidos"));
 
 			try
 			{
-				var solicitud = _mapper.Map<Solicitudes>(dto);
+				var solicitud = await _solicitudService
+					.NuevaSolicitud(dto, cancellationToken);
 
-				await _solicitudService.NuevaSolicitud(dto, cancellationToken);
-
-				return Ok(ApiResponseGlobal<string>.Ok(
-						  solicitud.GuidId.ToString(),
-						 "Solicitud creada correctamente"));
-
+				return Ok(
+					ApiResponseGlobal<string>.Ok(
+						solicitud.GuidId.ToString(),
+						"Solicitud creada correctamente"));
+			}
+			catch (BusinessException ex)
+			{
+				return BadRequest(
+					ApiResponseGlobal<string>.Fail(ex.Message, 400));
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500,
-					ApiResponseGlobal<string>.Fail($"Error interno: {ex.Message}", 500));
+				return StatusCode(
+					500,
+					ApiResponseGlobal<string>.Fail(
+						$"Error interno: {ex.Message}",
+						500));
 			}
 		}
 

@@ -11,6 +11,9 @@ namespace Core.Interfaces.RequestYonkes
 		Task ActualizarAsync(SolicitudCotizaciones cotizacion);
 
 		Task<bool> ExisteCotizacionAsync(Guid solicitudYonkeGuidId);
-		//Task<SolicitudCotizaciones> ObtenerPorStripePaymentIntentAsync(string paymentIntentId, CancellationToken cancellationToken = default);
+
+
+		//Total de cotizciones por cada yonke auntenticado
+		Task<int> ContarPorYonkeAsync(Guid yonkeGuidId, CancellationToken cancellationToken);
 	}
 }

@@ -34,11 +34,17 @@ namespace Core.Interfaces.Requests
 
 
 
-		//Solicitud mas reciente
+		//Solicitud mas reciente para el cliente 
 		Task<Solicitud_Busqueda_DTO?> ObtenerSolicitudMasRecienteAsync(Guid userId);
 
 
 		//Contar para saber los limites diarios de usaurios freee
 		Task<int> CountAsync(Expression<Func<Solicitudes, bool>> predicate, CancellationToken cancellationToken = default);
+
+
+		
+
+
+
 	}
 }

@@ -28,5 +28,9 @@ namespace Core.Interfaces.RequestYonkes.Cotizaciones
 		Task ActualizarCotizacionAsync(Guid cotizacionGuidId,
 									   RegistrarCotizacionRequest request,
 									   CancellationToken cancellationToken);
+
+
+		//Total de cotizciones por cada yonke auntenticado
+		Task<int> ObtenerCotizacionesPorYonkeAsync(CancellationToken cancellationToken);
 	}
 }
