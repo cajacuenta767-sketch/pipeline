@@ -1,4 +1,4 @@
-﻿using Core.DTO.SolicitudYonkes;
+using Core.DTO.SolicitudYonkes;
 using Core.Entitys;
 using Core.Enums;
 using Core.Interfaces.RequestYonkes;
@@ -224,6 +224,13 @@ namespace Infra.Repositorys.RequestYonkes
 			   Estatus = x.SolicitudYonkesEstatus.EstatusSolicitud,
 			   Vista = x.FechaVista.HasValue,
 			   FechaVista = x.FechaVista,
+			   ClienteGuidId = x.Solicitudes.UsuarioId,
+			   Descripcion = x.Solicitudes.Descripcion,
+			   Marca = x.Solicitudes.Marcas.Marca,
+			   Modelo = x.Solicitudes.Modelos.Modelo,
+			   Año = x.Solicitudes.Año,
+			   Motor = x.Solicitudes.Motor,
+			   Transmicion = x.Solicitudes.Transmicion,
 
 			   Imagenes = x.Solicitudes.solicitudesImagenes
 					   .Select(i => new SolicitudImagen_DTO
@@ -264,6 +271,13 @@ namespace Infra.Repositorys.RequestYonkes
 				   Estatus = x.SolicitudYonkesEstatus.EstatusSolicitud,
 				   Vista = x.FechaVista.HasValue,
 				   FechaVista = x.FechaVista,
+				   ClienteGuidId = x.Solicitudes.UsuarioId,
+				   Descripcion = x.Solicitudes.Descripcion,
+				   Marca = x.Solicitudes.Marcas.Marca,
+				   Modelo = x.Solicitudes.Modelos.Modelo,
+				   Año = x.Solicitudes.Año,
+				   Motor = x.Solicitudes.Motor,
+				   Transmicion = x.Solicitudes.Transmicion,
 
 				   Imagenes = x.Solicitudes.solicitudesImagenes
 					   .Select(i => new SolicitudImagen_DTO

@@ -1,4 +1,4 @@
-﻿using Core.DTO.SolicitudYonkes;
+using Core.DTO.SolicitudYonkes;
 
 namespace Core.Interfaces.RequestYonkes.Solicitudes
 {
@@ -17,5 +17,7 @@ namespace Core.Interfaces.RequestYonkes.Solicitudes
 
 		//Solicitudes de cada yonke
 		Task<List<SolicitudYonke_List_DTO>> ObtenerSolicitudesPorYonkeAsync(Guid YonkeGuidId, CancellationToken cancellationToken);
+
+		Task<List<SolicitudYonkeDestinatarioDTO>> ObtenerDestinatariosPorSolicitudAsync(Guid solicitudGuidId, CancellationToken cancellationToken);
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Core.DTO.SolicitudYonkes;
+using Core.DTO.SolicitudYonkes;
 using Core.Entitys;
 using Core.Exceptions;
 using Core.Interfaces.BuildSecurity;
@@ -51,6 +51,20 @@ namespace ApiYonke.Controllers.Suscriptores
 				$"La solicitud fue enviada correctamente a {totalYonkes} yonkes."));
 		}
 
+		/// <summary>
+		/// Obtiene los yonkes a los que fue enviada una solicitud (destinatarios con cobertura).
+		/// </summary>
+		[HttpGet("solicitud/{solicitudGuidId:guid}/destinatarios")]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Cliente, Soporte")]
+		public async Task<IActionResult> ObtenerDestinatariosPorSolicitud(Guid solicitudGuidId, CancellationToken cancellationToken)
+		{
+			var destinatarios = await _solicitudYonkeService
+				.ObtenerDestinatariosPorSolicitudAsync(solicitudGuidId, cancellationToken);
+
+			return Ok(ApiResponseGlobal<List<SolicitudYonkeDestinatarioDTO>>.Ok(
+				destinatarios,
+				"Destinatarios obtenidos correctamente."));
+		}
 
 		/// <summary>
 		/// Marcar Como vista una solicitud por parte del Yunke

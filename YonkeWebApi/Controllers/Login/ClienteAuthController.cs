@@ -1,12 +1,14 @@
-﻿using Core.DTO.Google_Login;
+using Core.DTO.Google_Login;
 using Core.DTO.Login;
 using Core.DTO.Login.otp;
 using Core.DTO.Login.usuarioDispo;
 using Core.Interfaces.Login.UserDispotivos;
 using Core.Interfaces.Login_Cliente.GoogleApple;
+using Core.ResponseGlobal;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -182,6 +184,30 @@ namespace ApiYonke.Controllers.Login
 
 
 
+		/// <summary>
+		/// Obtener perfil público del cliente por Guid (análogo a GET /api/Yonkes/{guidId})
+		/// </summary>
+		[HttpGet("{guidId:guid}")]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Asociado, Cliente, Soporte")]
+		public async Task<IActionResult> ObtenerClientePorGuid(Guid guidId)
+		{
+			if (guidId == Guid.Empty)
+			{
+				return BadRequest(ApiResponseHelper.Error("El identificador del cliente es requerido.", 400));
+			}
+
+			var cliente = await _clienteAuthService.ObtenerPerfilPublicoAsync(guidId);
+
+			if (cliente == null)
+			{
+				return NotFound(ApiResponseHelper.Error("No se encontró el cliente.", 404));
+			}
+
+			return Ok(ApiResponseHelper.Success(cliente));
+		}
+
+
+
 
 		/// <summary>
 		/// Regisstro del dispotivo del cleinte despues de hacer login exitoso
@@ -190,7 +216,7 @@ namespace ApiYonke.Controllers.Login
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
 		[HttpPost("registrar-dispositivo")]
-		[Authorize]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Cliente")]
 		public async Task<IActionResult> RegistrarDispositivo([FromBody] RegistrarDispositivoRequest request, CancellationToken cancellationToken = default)
 		{
 			try

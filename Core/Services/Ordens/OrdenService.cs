@@ -1,4 +1,4 @@
-﻿using Core.Exceptions;
+using Core.Exceptions;
 using Core.Interfaces.RequestYonkes;
 using Core.Interfaces.RequestYonkes.OrdenesPago;
 
@@ -111,7 +111,10 @@ namespace Core.Services.Ordens
 			// 2. VALIDAR PROPIETARIO
 			// ======================================
 
-			if (cotizacion.UsuarioId != usuarioId)
+			var clienteSolicitudId =
+				cotizacion.SolicitudYonkes?.Solicitudes?.UsuarioId;
+
+			if (clienteSolicitudId == null || clienteSolicitudId != usuarioId)
 			{
 				throw new UnauthorizedAccessException(
 					"No tienes permiso para aceptar esta cotización.");

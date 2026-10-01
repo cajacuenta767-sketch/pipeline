@@ -1,7 +1,8 @@
-﻿using Core.DTO.Login.AuthSoporte;
+using Core.DTO.Login.AuthSoporte;
 using Core.Interfaces.Login.AuthSoporte;
 using Core.ResponseGlobal;
 using Core.Services.Login;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace ApiYonke.Controllers.Login
 
 
 		[HttpPost("soporte")]
-		[Authorize(Roles = "Soporte")]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Soporte")]
 		public async Task<IActionResult> CrearUsuarioSoporte([FromBody] CrearUsuarioSoporteDTO request, CancellationToken cancellationToken)
 		{
 			var usuarioId = await _usuarioService.CrearUsuarioSoporteAsync(

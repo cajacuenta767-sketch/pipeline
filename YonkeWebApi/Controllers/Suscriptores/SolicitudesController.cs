@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Core.DTO.Solicitudes.Requests;
 using Core.Entitys;
 using Core.Exceptions;
@@ -122,7 +122,7 @@ namespace ApiYonke.Controllers.Suscriptores
 		/// <param name="guidId"></param>
 		/// <returns></returns>
 		[HttpGet("{guidId}")]
-		[Authorize]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Cliente, Asociado, Administrador, Soporte")]
 		public async Task<ActionResult<ApiResponseGlobal<Solicitud_Busqueda_DTO>>> GetByGuidId(Guid guidId)
 		{
 			// Validación inicial

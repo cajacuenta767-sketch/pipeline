@@ -1,4 +1,4 @@
-﻿using Core.DTO.SolicitudYonkes;
+using Core.DTO.SolicitudYonkes;
 using Core.Entitys;
 using Core.Enums;
 using Core.Exceptions;
@@ -293,6 +293,27 @@ namespace Core.Services.RequestYonkes
 			return await _unitOfWorkSolicitudYonkes
 				.SolicitudYonkeRepository
 				.ObtenerSolicitudesPorYonkeAsync(YonkeGuidId, cancellationToken);
+		}
+
+		public async Task<List<SolicitudYonkeDestinatarioDTO>> ObtenerDestinatariosPorSolicitudAsync(Guid solicitudGuidId, CancellationToken cancellationToken)
+		{
+			var envios = await _unitOfWorkSolicitudYonkes
+				.SolicitudYonkeRepository
+				.ObtenerPorSolicitudAsync(solicitudGuidId);
+
+			return envios.Select(x => new SolicitudYonkeDestinatarioDTO
+			{
+				SolicitudYonkeGuidId = x.GuidId,
+				YonkeGuidId = x.YonkeGuidId,
+				NombreYonke = x.Yonkes?.Nombre ?? "Yonke",
+				Logo = x.Yonkes?.LogoUrl,
+				Telefono = x.Yonkes?.Telefono,
+				EstatusId = x.EstatusId,
+				Estatus = x.SolicitudYonkesEstatus?.EstatusSolicitud ?? "Enviada",
+				FechaEnvio = x.FechaEnvio,
+				Vista = x.FechaVista.HasValue,
+				FechaVista = x.FechaVista
+			}).ToList();
 		}
 	}
 }

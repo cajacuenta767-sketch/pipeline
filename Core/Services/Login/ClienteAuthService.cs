@@ -1,4 +1,4 @@
-﻿using Core.DTO.Google_Login;
+using Core.DTO.Google_Login;
 using Core.DTO.Login;
 using Core.DTO.Login.otp;
 using Core.Entitys;
@@ -393,6 +393,33 @@ namespace Core.Services.Google_Login
 				Nombre = cliente.Nombre,
 				Correo = cliente.Correo,
 				FotoPerfil = cliente.FotoPerfil
+			};
+		}
+
+
+		// ============================================================
+		// OBTENER PERFIL PUBLICO POR GUID
+		// ============================================================
+
+		public async Task<ClientePerfilDTO?> ObtenerPerfilPublicoAsync(Guid clienteGuidId)
+		{
+			if (clienteGuidId == Guid.Empty)
+				return null;
+
+			var cliente = await _unitOfWorkCliente
+				.LoginRepositorio
+				.ObtenerPorGuidAsync(clienteGuidId);
+
+			if (cliente == null)
+				return null;
+
+			return new ClientePerfilDTO
+			{
+				GuidId = cliente.GuidId,
+				Nombre = cliente.Nombre,
+				FotoPerfil = cliente.FotoPerfil,
+				Telefono = cliente.Telefono,
+				Correo = cliente.Correo
 			};
 		}
 	}

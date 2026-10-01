@@ -1,4 +1,4 @@
-﻿namespace Core.DTO.SolicitudYonkes
+namespace Core.DTO.SolicitudYonkes
 {
 	public class SolicitudYonke_List_DTO
 	{
@@ -25,6 +25,20 @@
 		public DateTime? FechaVista { get; set; }
 
 		public int? Cotizaciones { get; set; }
+
+		public Guid ClienteGuidId { get; set; }
+
+		public string? Descripcion { get; set; }
+
+		public string? Marca { get; set; }
+
+		public string? Modelo { get; set; }
+
+		public int? Año { get; set; }
+
+		public string? Motor { get; set; }
+
+		public string? Transmicion { get; set; }
 
 		public List<SolicitudImagen_DTO> Imagenes { get; set; } = new();
 
